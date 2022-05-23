@@ -8,31 +8,9 @@ import avatar2 from "../assets/avatar-2.png";
 import avatar3 from "../assets/avatar-3.webp";
 import avatar4 from "../assets/avatar-4.webp";
 
-const dummyChannels = [
-  {
-    roomId: 1,
-    roomName: "general",
-    avatar: avatar1,
-  },
-  {
-    roomId: 2,
-    roomName: "random",
-    avatar: avatar2,
-  },
-  {
-    roomId: 2,
-    roomName: "chill",
-    avatar: avatar3,
-  },
-  {
-    roomId: 3,
-    roomName: "buildspace",
-    avatar: avatar4,
-  },
-];
 const Sidebar = () => {
   const router = useRouter();
-  const [channels, setChannels] = useState(dummyChannels);
+  const [channels, setChannels] = useState([]);
 
   const getchs = async () => {
     try {

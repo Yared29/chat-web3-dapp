@@ -31,6 +31,51 @@ export const ChatDappProvider = ({ children }) => {
     checkIfWalletIsConnected();
   }, []);
 
+  const getUserData = async () => {
+    if (!currentAccount) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/getCurrentUserData?account=${currentAccount}`
+      );
+
+      const data = await response.json();
+      setCurrentUser(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getUserData();
+  }, [currentAccount]);
+
+  useEffect(() => {
+    setRoomName(router.query.name);
+    dispatch({ type: "clear", data: {} });
+    setPlaceholder(`Message ${router.query.name}`);
+    setMessageText("");
+    getMessages();
+  }, [router.query]);
+
+  const getMessages = () => {
+    const _name = router.query.name;
+    const _roomId = router.query.id;
+    const messagesRef = gun.get(_name);
+
+    messagesRef.map().once((message) => {
+      dispatch({
+        type: "add",
+        data: {
+          sender: message.sender,
+          content: message.content,
+          avatar: message.avatar,
+          createdAt: message.createdAt,
+          messageId: message.messageId,
+        },
+      });
+    });
+  };
+
   const createUserAccount = async (userAddress = currentAccount) => {
     if (!window.ethereum) return;
     try {
