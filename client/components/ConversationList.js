@@ -34,6 +34,20 @@ const dummyDms = [
 ];
 
 const ConversationList = () => {
+  const [dms, setDms] = useState([]);
+  const getDms = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getdms`);
+
+      setDms(await response.json());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getDms();
+  }, []);
+
   return (
     <div className={styles.conversations}>
       <div className={styles.conversationListTop}>
@@ -65,7 +79,7 @@ const ConversationList = () => {
           <p>Nitro</p>
         </div>
         <div className={styles.dmTitle}>DIRECT MESSAGES</div>
-        {dummyDms.map((dm, index) => (
+        {dms.map((dm, index) => (
           <DmCard
             key={index}
             name={dm.name}
